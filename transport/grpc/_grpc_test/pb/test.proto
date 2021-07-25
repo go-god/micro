@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+// protoc 3.11.4 版本请用这个
+option go_package = "./;pb";
+
+package pb;
+
+service Test {
+  rpc Test (TestRequest) returns (TestResponse) {}
+}
+
+message TestRequest {
+  string a = 1;
+  int64 b = 2;
+}
+
+message TestResponse {
+  string v = 1;
+}
