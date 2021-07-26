@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"reflect"
 
-	"github.com/go-god/micro/endpoint"
-	"github.com/go-god/micro/transport"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
+
+	"github.com/go-god/micro/endpoint"
 )
 
 // Client wraps a gRPC connection and provides a method that implements
@@ -17,8 +17,8 @@ type Client struct {
 	client            *grpc.ClientConn
 	serviceName       string
 	method            string
-	encRequestStream  transport.EncodeRequestStream
-	decResponseStream transport.DecodeResponseStream
+	encRequestStream  EncodeRequestStream
+	decResponseStream DecodeResponseStream
 	grpcReply         reflect.Type
 	before            []ClientRequestFunc
 	after             []ClientResponseFunc
@@ -32,8 +32,8 @@ func NewClient(
 	cc *grpc.ClientConn,
 	serviceName string,
 	method string,
-	encRequestStream transport.EncodeRequestStream,
-	decResponseStream transport.DecodeResponseStream,
+	encRequestStream EncodeRequestStream,
+	decResponseStream DecodeResponseStream,
 	grpcReply interface{},
 	options ...ClientOption,
 ) *Client {

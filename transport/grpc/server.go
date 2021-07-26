@@ -3,11 +3,12 @@ package grpc
 import (
 	"context"
 
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/metadata"
+
 	"github.com/go-god/micro/endpoint"
 	"github.com/go-god/micro/log"
 	"github.com/go-god/micro/transport"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/metadata"
 )
 
 // Handler which should be called from the gRPC binding of the service
@@ -20,8 +21,8 @@ type Handler interface {
 // Server wraps an endpoint and implements grpc.Handler.
 type Server struct {
 	e                    endpoint.Endpoint
-	decodeRequestStream  transport.DecodeRequestStream
-	encodeResponseStream transport.EncodeResponseStream
+	decodeRequestStream  DecodeRequestStream
+	encodeResponseStream EncodeResponseStream
 	before               []ServerRequestFunc
 	after                []ServerResponseFunc
 	finalizer            []ServerFinalizerFunc
@@ -35,15 +36,15 @@ type Server struct {
 // caller business domain, not gRPC request and reply types.
 func NewServer(
 	e endpoint.Endpoint,
-	decodeRequestStream transport.DecodeRequestStream,
-	encodeResponseStream transport.EncodeResponseStream,
+	decodeRequestStream DecodeRequestStream,
+	encodeResponseStream EncodeResponseStream,
 	options ...ServerOption,
 ) *Server {
 	s := &Server{
 		e:                    e,
 		decodeRequestStream:  decodeRequestStream,
 		encodeResponseStream: encodeResponseStream,
-		errorHandler:         transport.NewLogErrorHandler(log.DummyLogger),
+		errorHandler:         transport.NewLogErrorHandler(log.NewNopLogger()),
 	}
 
 	for _, option := range options {
